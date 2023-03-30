@@ -3,11 +3,11 @@ Docker es una herramienta que tiene como objetivo simplificar el proceso de cons
 
 # ÍNDICE
 - [Bases](#bases)
-    - [Imagen 🖼️](#imagen-🖼️)
-    - [Contenedor ⏹️](#contenedor-⏹️)
-    - [Volumen 🗂️](#volumen-🗂️)
+    - [Imagen 🖼️](#imagen-%EF%B8%8F)
+    - [Contenedor ⏹️](#contenedor-%EF%B8%8F)
+    - [Volumen 🗂️](#volumen-%EF%B8%8F)
         - [Tipos de volúmenes](#tipos-de-volúmenes)
-    - [Nertwork 🌐](#nertwork-🌐)
+    - [Nertwork 🌐](#nertwork-%EF%B8%8F)
     - [Logs](#Logs)
     - [Termina interactiva](#termina-interactiva)
 - [Contenedores múltiples](#contenedores-múltiples)
