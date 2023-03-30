@@ -7,8 +7,8 @@ Docker es una herramienta que tiene como objetivo simplificar el proceso de cons
     - [Contenedor ⏹️](#contenedor-%EF%B8%8F)
     - [Volumen 🗂️](#volumen-%EF%B8%8F)
         - [Tipos de volúmenes](#tipos-de-volúmenes)
-    - [Nertwork 🌐](#nertwork-%EF%B8%8F)
-    - [Logs](#Logs)
+    - [Network 🌐](#network-%EF%B8%8F)
+    - [Logs](#logs)
     - [Termina interactiva](#termina-interactiva)
 - [Contenedores múltiples](#contenedores-múltiples)
 
