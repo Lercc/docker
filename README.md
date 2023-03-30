@@ -1,9 +1,22 @@
 # DOCKER
+Docker es una herramienta que tiene como objetivo simplificar el proceso de construcción, distribución y despliegue de aplicaciones mediante la utilización de contenedores
 
-## IMAGEN 🖼️
+# ÍNDICE
+- [Bases](#bases)
+    - [Imagen 🖼️](#imagen-🖼️)
+    - [Contenedor ⏹️](#contenedor-⏹️)
+    - [Volumen 🗂️](#volumen-🗂️)
+        - [Tipos de volúmenes](#tipos-de-volúmenes)
+    - [Nertwork 🌐](#nertwork-🌐)
+    - [Logs](#Logs)
+    - [Termina interactiva](#termina-interactiva)
+- [Contenedores múltiples](#contenedores-múltiples)
+
+
+# Bases
+## Imagen 🖼️
 Archivo construido mediante capas en la cual figuran todas las dependencias, configuraciones, scripts, binarios, etc necesarios para su ejecucíon. Además es el archivo base con el cúal se creará el contenedor.
 
-### COMANDOS 🖼️
 - Descargar una imagen:
 ```bash
     $ docker pull <nombre_de_la_imagen>:<tag_de_versión>
@@ -30,10 +43,9 @@ Archivo construido mediante capas en la cual figuran todas las dependencias, con
     $ docker image prune -a     // todas las imágenes no usadas
 ```
 
-## CONTENEDOR ⏹️
+## Contenedor ⏹️
 Instancia de una imagen corriendo en un entorno aislado.
 
-### COMANDOS ⏹️
 - Crear un contenedor:
 ```bash
     $ docker container run --detach -publish <puerto_de_la_maquina_host>:<puerto_del_contenedor> --name <nombre_del_contenedor> --volume <nombre_del_volumen> --network <nombre_de_la_network> <nombre_de_la_imagen>:<tag_de_versión>
@@ -64,16 +76,15 @@ Instancia de una imagen corriendo en un entorno aislado.
     $ docker container stop mysql-container
 ```
 
-## VOLUMEN 🗂️
+## Volumen 🗂️
 Proporcionan la capacidad de conectar rutas específicas del sistema de archivos del contenedor a la máquita host.
 Si se montan directorios en el contenedor, los cambios en ese directorio tbn se ven reflejados en la máquina host.
 
-## TIPO DE VOLÚMENES
+### Tipos de volúmenes
 1. NAMED VOLUMES: Se especifica tanto el path del contenedor como de la máquina host.
 2. BIND VOLUMES: Trabaja con paths abosolutos.
 3. ANONYMOUS VOLUMES: Solo se especifica el path del contenedor y Docker asigna automáticamente en el host.
 
-### COMANDOS 🗂️
 - Crear un volumen:
 ```bash
     $ docker volumen create <nombre_del_volumen>
@@ -91,10 +102,9 @@ Si se montan directorios en el contenedor, los cambios en ese directorio tbn se 
     $ docker volumen rm mysql-db-volume
 ```
 
-## NETWORK 🌐
+## Nertwork 🌐
 Instancia de una imagen corriendo en un entorno aislado.
 
-### COMANDOS 🌐
 - Crear una network:
 ```bash
     $ docker network create <nombre_del_network>
@@ -111,18 +121,22 @@ Instancia de una imagen corriendo en un entorno aislado.
     $ docker network rm <nombre_del_network>
     $ docker network rm app-network 
 ```
-# LOGS
+## Logs
 Para ver el output del proyecto montado en el contenedor
 ```bash
     $ docker container logs <nombre_del_contenedor>
     $ docker container logs --folow <nombre_del_contenedor>
 ```
 
-
-## TERMINAL INTERACTIVA
+## Termina interactiva
 Acceder a la terminal intreciva del contenedor
 ```bash
     $ docker  exec -it <nombre_del_contenedor> <ejecutable>
     $ docker  exec -it mysql-container bash
     $ docker  exec -it mysql-container /bin/sh
 ```
+
+Editar con ```vi```, ver con ```cat```, editar: ```i```, guardar:```:wq!```
+
+# Contenedores múltiples
+Uso de Docker Compose permite ejecutar de manera sencilla todas las instrucciones necesarias para poner en marcha los contenedores con todo lo requerido por nuestra aplicación.
