@@ -65,7 +65,13 @@ Instancia de una imagen corriendo en un entorno aislado.
 ```
 
 ## VOLUMEN 🗂️
-Instancia de una imagen corriendo en un entorno aislado.
+Proporcionan la capacidad de conectar rutas específicas del sistema de archivos del contenedor a la máquita host.
+Si se montan directorios en el contenedor, los cambios en ese directorio tbn se ven reflejados en la máquina host.
+
+## TIPO DE VOLÚMENES
+1. NAMED VOLUMES: Se especifica tanto el path del contenedor como de la máquina host.
+2. BIND VOLUMES: Trabaja con paths abosolutos.
+3. ANONYMOUS VOLUMES: Solo se especifica el path del contenedor y Docker asigna automáticamente en el host.
 
 ### COMANDOS 🗂️
 - Crear un volumen:
@@ -105,7 +111,18 @@ Instancia de una imagen corriendo en un entorno aislado.
     $ docker network rm <nombre_del_network>
     $ docker network rm app-network 
 ```
+# LOGS
+Para ver el output del proyecto montado en el contenedor
+```bash
+    $ docker container logs <nombre_del_contenedor>
+    $ docker container logs --folow <nombre_del_contenedor>
+```
 
 
-
-
+## TERMINAL INTERACTIVA
+Acceder a la terminal intreciva del contenedor
+```bash
+    $ docker  exec -it <nombre_del_contenedor> <ejecutable>
+    $ docker  exec -it mysql-container bash
+    $ docker  exec -it mysql-container /bin/sh
+```
