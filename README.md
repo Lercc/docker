@@ -121,6 +121,12 @@ Instancia de una imagen corriendo en un entorno aislado.
     $ docker network rm <nombre_del_network>
     $ docker network rm app-network 
 ```
+
+- Asignación de network
+```bash
+    $ docker network connect <nombre_del_network> <id_o_nombre_del_contenedor>
+    $ docker network connect <nombre_del_network> <id_o_nombre_del_contenedor>
+```
 ## Logs
 Para ver el output del proyecto montado en el contenedor
 ```bash
@@ -140,3 +146,58 @@ Editar con ```vi```, ver con ```cat```, editar: ```i```, guardar:```:wq!```
 
 # Contenedores múltiples
 Uso de Docker Compose permite ejecutar de manera sencilla todas las instrucciones necesarias para poner en marcha los contenedores con todo lo requerido por nuestra aplicación.
+
+```bash
+    $ docker compose up
+```
+```bash
+    $ docker compose down
+```
+
+## Múltiples servicios
+```bash
+version: '3.1'
+
+services:
+    db:
+        container_name: ${MONGO_DB_NAME}
+        image: mongo:6.0
+        volumes:
+            - poke-vol:/data/db
+        # ports:
+        #   - 27017:27017
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+        command: ['--auth']
+
+    mongo-express:
+        depends_on:
+            - db
+        image: mongo-express:1.0.0-alpha.4
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
+            ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+            ME_CONFIG_MONGODB_SERVER: ${MONGO_DB_NAME}
+        ports:
+            - 8080:8081
+        restart: always
+
+    poke-app:
+        depends_on:
+            - db
+            - mongo-express
+        image: klerith/pokemon-nest-app:1.0.0
+        ports:
+            - 3000:3000
+        environment:
+            # MONGODB: mongodb://lercc:123456@pokemonDB:27017
+            MONGODB: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_DB_NAME}:27017
+            DB_NAME: ${MONGO_DB_NAME}
+        restart: always
+
+volumes:
+    poke-vol:
+        external: false
+```
