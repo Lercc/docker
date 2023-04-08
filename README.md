@@ -15,6 +15,7 @@ Docker es una herramienta que tiene como objetivo simplificar el proceso de cons
     - [Multi-state build](#multi-state-build)
     - [Docker compose build](#docker-compose-build)
 - [Github actions](#github-actions)
+- [Nginx](#nginx)
 
 
 # Bases
@@ -386,4 +387,56 @@ jobs:
       run: |
         docker push lerccen/docker-graphql:$NEW_VERSION
         docker push lerccen/docker-graphql:latest
+```
+
+# Nginx
+Nginx, cuyo nombre se pronuncia como "engine-x", es un servidor web y proxy inverso altamente eficiente que se utiliza ampliamente para servir contenido estático y dinámico en la web. Asimismo, es frecuentemente empleado como un proxy inverso para gestionar la carga del servidor y equilibrar la carga en múltiples servidores. Lo utilizaremos para hacer deploy de un SPA mediante el uso de docker.
+- ```/etc/nginx/conf.d/default.conf -> nginxconf :```
+
+```nginxconf
+server {
+    listen       80;
+    # listen  [::]:80;
+    server_name  localhost;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ {
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #}
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+}
 ```
