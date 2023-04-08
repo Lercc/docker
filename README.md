@@ -14,6 +14,7 @@ Docker es una herramienta que tiene como objetivo simplificar el proceso de cons
 - [Dockenizar una aplicación](#dockenizar-una-aplicación)
     - [Multi-state build](#multi-state-build)
     - [Docker compose build](#docker-compose-build)
+- [Github actions](#github-actions)
 
 
 # Bases
@@ -329,3 +330,60 @@ volumes:
 ```
 
 
+
+# Github actions
+GitHub Actions es una plataforma de automatización de flujos de trabajo (workflows) integrada en GitHub. Permite a los desarrolladores automatizar procesos de compilación, pruebas, despliegue y otras tareas que están relacionadas con el desarrollo de software.
+En relación a docker se utilizará para que a partir del código del repositorio se cree una nueva imagen y se suba a docker hub con el tag automático depeniendo del nombre del commit "major:", "minor:" o cambio menor
+
+- ```docker-graphql/.github/workflows/docker-image.yml```
+
+```yml
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code 
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Git Semantic Version
+      uses: PaulHatch/semantic-version@v4.0.3
+      with:
+        major_pattern: "major:"
+        minor_pattern: "feat:"
+        format: "${major}.${minor}.${patch}-prerelease${increment}"
+      id: version
+
+    - name: Docker login
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        
+    - name: Build Docker Image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker build -t lerccen/docker-graphql:$NEW_VERSION .
+        docker build -t lerccen/docker-graphql:latest .
+        
+    - name: Push Docker Image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker push lerccen/docker-graphql:$NEW_VERSION
+        docker push lerccen/docker-graphql:latest
+```
