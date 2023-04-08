@@ -11,6 +11,7 @@ Docker es una herramienta que tiene como objetivo simplificar el proceso de cons
     - [Logs](#logs)
     - [Termina interactiva](#termina-interactiva)
 - [Contenedores múltiples](#contenedores-múltiples)
+- [Dockenizar una aplicación](#dockenizar-una-aplicación)
 
 
 # Bases
@@ -200,4 +201,39 @@ services:
 volumes:
     poke-vol:
         external: false
+```
+
+# Dockenizar una aplicación
+-   Dockenizar una aplicación: Proceso de tomar un código fuente y generar una imagen lista para montar y correrla en un contenedor.
+```dockerfile
+# BUILDX: CONSTUCCIÓN PARA MULTIPLES PLATAFORMAS
+# FROM --plataform=linux/amd64 node:19.2-alpine3.16
+# FROM --platform=$BUILDPLATFORM node:19.2-alpine3.16
+# docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t <username>/<image>:latest --push .
+FROM node:19.2-alpine3.16
+# /app /usr /lib
+
+# cd app
+WORKDIR /app
+
+#    Origen       Destino [/app]
+COPY package.json ./
+
+# instalar dependencias
+RUN npm install
+
+# copia Origen Destino [/app] ignorando los archivos que estan en el dockerignore 
+COPY . .
+
+# realizar testing
+RUN npm run test
+
+# borrar las pruebas
+RUN rm -rf tests && rm -rf node_modules
+
+# instalar únicamente dependencias de producción
+RUN npm install --prod
+
+# comando run de la imagen
+CMD ["node", "app.js"]
 ```
