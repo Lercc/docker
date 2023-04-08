@@ -333,7 +333,7 @@ volumes:
 
 # Github actions
 GitHub Actions es una plataforma de automatización de flujos de trabajo (workflows) integrada en GitHub. Permite a los desarrolladores automatizar procesos de compilación, pruebas, despliegue y otras tareas que están relacionadas con el desarrollo de software.
-En relación a docker se utilizará para que a partir del código del repositorio se cree una nueva imagen y se suba a docker hub con el tag automático depeniendo del nombre del commit "major:", "minor:" o cambio menor
+En relación a docker se utilizará para que a partir del código del repositorio se cree una nueva imagen y se suba a docker hub con el tag automático dependiendo del nombre del commit "major:", "minor:" o cambio menor
 
 - ```docker-graphql/.github/workflows/docker-image.yml```
 
