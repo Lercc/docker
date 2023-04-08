@@ -12,6 +12,8 @@ Docker es una herramienta que tiene como objetivo simplificar el proceso de cons
     - [Termina interactiva](#termina-interactiva)
 - [Contenedores múltiples](#contenedores-múltiples)
 - [Dockenizar una aplicación](#dockenizar-una-aplicación)
+    - [Multi-state build](#multi-state-build)
+    - [Docker compose build](#docker-compose-build)
 
 
 # Bases
@@ -205,8 +207,13 @@ volumes:
 
 # Dockenizar una aplicación
 -   Dockenizar una aplicación: Proceso de tomar un código fuente y generar una imagen lista para montar y correrla en un contenedor.
+```bash
+$ docker build --tag cron-ticker:1.0.0
+```
+
+### Dockerfile
 ```dockerfile
-# BUILDX: CONSTUCCIÓN PARA MULTIPLES PLATAFORMAS
+# BUILDX: CONSTUCCIÓN PARA MULTIPLES PLATAFORMAS https://docs.docker.com/build/building/multi-platform/
 # FROM --plataform=linux/amd64 node:19.2-alpine3.16
 # FROM --platform=$BUILDPLATFORM node:19.2-alpine3.16
 # docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t <username>/<image>:latest --push .
@@ -237,3 +244,88 @@ RUN npm install --prod
 # comando run de la imagen
 CMD ["node", "app.js"]
 ```
+
+## Multi-state build
+```bash
+$ docker build --tag cron-ticker:1.0.0
+```
+
+### Dockerfile
+```dockerfile
+# STEP: dependencies
+FROM node:19.2-alpine3.16 AS dependencies
+WORKDIR /app
+COPY package.json ./
+RUN npm install
+
+# STEP: builder-test
+FROM node:19.2-alpine3.16 AS builder-test
+WORKDIR /app
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY . .
+RUN npm run test
+
+# STEP: prod-dependencies
+FROM node:19.2-alpine3.16 AS prod-dependencies
+WORKDIR /app
+COPY package.json ./
+RUN npm install --prod
+
+# STEP: runner
+FROM node:19.2-alpine3.16 AS runner
+WORKDIR /app
+COPY --from=prod-dependencies /app/node_modules ./node_modules
+COPY . .
+CMD ["node", "app.js"]
+```
+## Docker compose build
+```bash
+    $ docker compose -f docker-compose.prod.yml build
+```
+```bash
+    $ docker compose -f docker-compose.prod.yml up
+```
+### doker-compose.prod.yml
+```bash
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      target: prod
+      dockerfile: Dockerfile
+    image: lerccen/teslo-shop-backend
+    container_name: nest-app
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      APP_VERSION: ${APP_VERSION}
+      STAGE: ${STAGE}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      PORT: ${PORT}
+      HOST_API: ${HOST_API}
+      JWT_SECRET: ${JWT_SECRET}
+  
+  db:
+    image: postgres:14.3
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    container_name: ${DB_NAME}
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+volumes:
+  postgres-db:
+    external: false
+```
+
+
