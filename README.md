@@ -1,7 +1,7 @@
 # DOCKER
 Docker es una herramienta que tiene como objetivo simplificar el proceso de construcción, distribución y despliegue de aplicaciones mediante la utilización de contenedores
 
-# ÍNDICE:
+# ÍNDICE
 - [Bases](#bases)
     - [Imagen 🖼️](#imagen-%EF%B8%8F)
     - [Contenedor ⏹️](#contenedor-%EF%B8%8F)
